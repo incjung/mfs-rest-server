@@ -6,7 +6,7 @@ Compile/Package with _mfs-rest-server.jar_, and uploaed it on one of cluster nod
 This service uses default 3000 port. You can change the port like : 
 
 
-`java -jar mfs-rest-server.jar <port: default 3000>`
+`$ java -jar mfs-rest-server.jar`
 
 
 # package
@@ -19,7 +19,7 @@ This service uses default 3000 port. You can change the port like :
 Leiningen is for automating tool for test, compiling, packaging.
 - https://github.com/technomancy/leiningen
 
-`lein ring uberjar` 
+`$ lein ring uberjar` 
 
 Then, You can find two jar files in _/target_ directory.
 
@@ -28,11 +28,11 @@ Then, You can find two jar files in _/target_ directory.
 ## Start service
 Upload the final jars _mfs-rest-server.jar_ on the MapR Cluster.
 
-`java -jar mfs-rest-server.jar`
+`$ java -jar mfs-rest-server.jar`
 
 Default http port is 3000, if you want to change it, 
 
-`PORT=8000 java -jar mfs-rest-server.jar`
+`$ PORT=8000 java -jar mfs-rest-server.jar`
 
 ![front page](../img/mfs-swaager.png "swagger page")
 ![mkdir](../img/swaager-mkdir.png "mkdir api")
@@ -42,7 +42,7 @@ Default http port is 3000, if you want to change it,
 
 
 ## Access service
-open ``http:/<node>:8000/index.html`
+open `http:/<node>:8000/index.html`
 
 
 
