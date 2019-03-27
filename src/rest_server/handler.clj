@@ -29,66 +29,65 @@
       :spec "/swagger.json"
       :data {:info {:title "MFS-REST-API"
                     :description "MapR FileSystem REST API"}
-             :tags [{:name "HDFS", :description "HDFS APIs copy/copyFromLocal/copyToLocal/mkdir/chmod/chown/delete"}
-                    {:name "HTTPFS", :description "HTTPFS APIs"}
-                    {:name "MAPRCLI", :description "MAPRCLI APIs"}]}}}
+             :tags [{:name "HDFS", :description "HDFS APIs copy/copyFromLocal/copyToLocal/mkdir/chmod/chown/delete"}]}}}
+                    ;;{:name "HTTPFS", :description "HTTPFS APIs"}]}}}
 
-    (context "/httpfs" []
-             :tags ["HTTPFS"]
+    ;; (context "/httpfs" []
+    ;;          :tags ["HTTPFS"]
 
-             ;;HTTP GET SHELL COMMAND
-             (GET "/hadoop-cmd" []
-                  :return ReturnOfSh
-                  :query-params [cmd :- String, opt :- String, path :- String]
-                  :summary "In order to use 'hadoop fs <cmd> <option> <path>' in Shellb"
-                  (ok (sh/sh "hadoop" "fs" cmd opt path)))
+    ;;          ;;HTTP GET SHELL COMMAND
+    ;;          (GET "/hadoop-cmd" []
+    ;;               :return ReturnOfSh
+    ;;               :query-params [cmd :- String, opt :- String, path :- String]
+    ;;               :summary "In order to use 'hadoop fs <cmd> <option> <path>' in Shellb"
+    ;;               (ok (sh/sh "hadoop" "fs" cmd opt path)))
 
-             ;;HTTP GET OPEN/GETFILESTATUS/LISTSTATUS/
+    ;;          ;;HTTP GET OPEN/GETFILESTATUS/LISTSTATUS/
 
-             ;;"http://172.16.28.145:14000/webhdfs/v1/aaa?op=open&user.name=mapr"
-             (GET "/GET" []
-                  :return String
-                  :query-params [FULLURL :- String, user :- String, password :- String]
-                  :summary "For GET PROTOCOL"
-                  (ok (:body (client/get FULLURL) {:basic-auth [user password]})))
+    ;;          ;;"http://172.16.28.145:14000/webhdfs/v1/aaa?op=open&user.name=mapr"
+    ;;          (GET "/GET" []
+    ;;               :return String
+    ;;               :query-params [FULLURL :- String, user :- String, password :- String]
+    ;;               :summary "For GET PROTOCOL"
+    ;;               (ok (:body (client/get FULLURL) {:basic-auth [user password]})))
 
-             ;; (GET "/OPEN" []
-             ;;      :return String
-             ;;      :query-params [protocol :- String, host :- String, port :- String, filepath :- String, user :- String, password :- String]
-             ;;      :summary "HTTPFS OPEN CALL"
-             ;;      (print (format "%s://%s:%s/webhdfs/v1/%s?op=open&user.name=%s" protocol host port filepath user))
-             ;;      (ok (:body (client/get (format "%s://%s:%s/webhdfs/v1/%s?op=open&user.name=%s" protocol host port filepath user) {:basic-auth [user password]}))))
+    ;;          ;; (GET "/OPEN" []
+    ;;          ;;      :return String
+    ;;          ;;      :query-params [protocol :- String, host :- String, port :- String, filepath :- String, user :- String, password :- String]
+    ;;          ;;      :summary "HTTPFS OPEN CALL"
+    ;;          ;;      (print (format "%s://%s:%s/webhdfs/v1/%s?op=open&user.name=%s" protocol host port filepath user))
+    ;;          ;;      (ok (:body (client/get (format "%s://%s:%s/webhdfs/v1/%s?op=open&user.name=%s" protocol host port filepath user) {:basic-auth [user password]}))))
 
-             ;; To creat directory : http://172.16.28.145:14000/webhdfs/v1/user/mapr/DIR?op=MKDIRS&user.name=mapr
+    ;;          ;; To creat directory : http://172.16.28.145:14000/webhdfs/v1/user/mapr/DIR?op=MKDIRS&user.name=mapr
 
-             (PUT "/PUT" []
-                     :return String
-                     :query-params [FULLURL :- String, user :- String, password :- String]
-                     :summary "FOR PUT PROTOCOL"
-                     (ok (:body (client/put FULLURL  {:basic-auth [user password]}))))
+    ;;          (PUT "/PUT" []
+    ;;                  :return String
+    ;;                  :query-params [FULLURL :- String, user :- String, password :- String]
+    ;;                  :summary "FOR PUT PROTOCOL"
+    ;;                  (ok (:body (client/put FULLURL  {:basic-auth [user password]}))))
 
-             ;;
-             (DELETE "/DELETE" []
-                     :return String
-                     :query-params [FULLURL :- String, user :- String, password :- String]
-                     :summary "FOR DELETE PROTOCOL"
-                     (ok (:body (client/delete FULLURL  {:basic-auth [user password]})))))
+    ;;          ;;
+    ;;          (DELETE "/DELETE" []
+    ;;                  :return String
+    ;;                  :query-params [FULLURL :- String, user :- String, password :- String]
+    ;;                  :summary "FOR DELETE PROTOCOL"
+    ;;                  (ok (:body (client/delete FULLURL  {:basic-auth [user password]})))))
 
-    (context "/maprcli" []
-             :tags ["MAPRCLI"]
+    ;; (context "/maprcli" []
+    ;;          :tags ["MAPRCLI"]
 
-             ;;baseurl='https://'+apiserver+':8443/rest/'
-             (GET "/GET" []
-                  :return String
-                  :query-params [FULLURL :- String, user :- String, password :- String]
-                  :summary "For GET Protocol (ex, http://172.16.28.145:14000/webhdfs/v1/aaa?op=open&user.name=mapr)"
-                  (ok (:body (client/get FULLURL) {:basic-auth [user password]})))
+    ;;          ;;baseurl='https://'+apiserver+':8443/rest/'
+    ;;          (GET "/GET" []
+    ;;               :return String
+    ;;               :query-params [FULLURL :- String, user :- String, password :- String]
+    ;;               :summary "For GET Protocol (ex, http://172.16.28.145:14000/webhdfs/v1/aaa?op=open&user.name=mapr)"
+    ;;               (ok (:body (client/get FULLURL) {:basic-auth [user password]})))
 
-             (GET "/sh" []
-                  :return ReturnOfSh
-                  :query-params [cmd :- String, opt :- String]
-                  :summary "Shell script with only one option"
-                  (ok (sh/sh cmd opt))))
+    ;;          (GET "/sh" []
+    ;;               :return ReturnOfSh
+    ;;               :query-params [cmd :- String, opt :- String]
+    ;;               :summary "Shell script with only one option"
+    ;;               (ok (sh/sh cmd opt))))
 
 
     (context "/hdfs" []
