@@ -8,12 +8,6 @@
             [org.apache.hadoop.fs.permission FsPermission]
             [org.apache.hadoop.fs FileSystem FileUtil FSDataInputStream FSDataOutputStream Path]))
 
-(s/defschema Pizza
-  {:name s/Str
-   (s/optional-key :description) s/Str
-   :size (s/enum :L :M :S)
-   :origin {:country (s/enum :FI :PO)
-            :city s/Str}})
 
 (s/defschema ReturnOfSh
   {:exit s/Int
@@ -99,55 +93,89 @@
 
     (context "/hdfs" []
              :tags ["HDFS"]
-             
+
              (GET "/mkdir" []
                   :return String
                   :query-params [path :- String]
                   :summary "hadoop fs -mkdir <path>"
-                  (ok (str (or (.mkdirs (hdfsfilesystem "/") (Path. path)) false))))
+                  (ok (str (try
+                    (.mkdirs (hdfsfilesystem "/") (Path. path)) 
+                    (catch Exception e (str "caught exception: " e (.getMessage e)))))))
 
              (GET "/delete" []
                   :return String
                   :query-params [path :- String]
                   :summary "hadoop fs -rm -r <path>"
-                  (ok (str (or (.delete (hdfsfilesystem "/") (Path. path) true) false))))
+                  (ok (str (try
+                             (.delete (hdfsfilesystem "/") (Path. path) true)
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
 
              (GET "/copy" []
                   :return String
                   :query-params [src :- String, dst :- String]
                   :summary "hadoop fs -cp <src> <dst>"
-                  (ok (str (or (FileUtil/copy (hdfsfilesystem "/") (Path. src) (hdfsfilesystem "/") (Path. dst) false (Configuration.)) false))))
+
+                  (ok (str (try
+                             (FileUtil/copy (hdfsfilesystem "/") (Path. src) (hdfsfilesystem "/") (Path. dst) false (Configuration.))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
+
 
              (GET "/move" []
                   :return String
                   :query-params [src :- String, dst :- String]
                   :summary "hadoop fs -mv <src> <dst>"
-                  (ok (str (or (FileUtil/copy (hdfsfilesystem "/") (Path. src) (hdfsfilesystem "/") (Path. dst) true (Configuration.)) false))))
+                  (ok (str (try
+                             (FileUtil/copy (hdfsfilesystem "/") (Path. src) (hdfsfilesystem "/") (Path. dst) true (Configuration.))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
 
              (GET "/copyFromLocalFile" []
                   :return String
                   :query-params [src :- String, dst :- String]
                   :summary "hadoop fs -copyFromLocalFile <src_of_local> <dst_of_cluster>"
-                  (ok (str (or (nil? (.copyFromLocalFile (hdfsfilesystem "/") (Path. src) (Path. dst))) false))))
+                  (ok (str (try
+                             (nil? (.copyFromLocalFile (hdfsfilesystem "/") (Path. src) (Path. dst)))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
+
 
              (GET "/copyToLocalFile" []
                   :return String
                   :query-params [src :- String, dst :- String]
-           :summary "hadoop fs -copytoLocalFile <src_of_cluster> <dst_of_local>"
-           (ok (str (or (nil? (.copyToLocalFile (hdfsfilesystem "/") (Path. src) (Path. dst))) false))))
+                  :summary "hadoop fs -copytoLocalFile <src_of_cluster> <dst_of_local>"
+                  (ok (str (try
+                             (nil? (.copyToLocalFile (hdfsfilesystem "/") (Path. src) (Path. dst)))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
+
+
              (GET "/chmod" []
                   :return String
                   :query-params [path :- String, mode :- String]
                   :summary "hadoop fs -chmod <mode> <path>"
-                  (ok (str (or (nil? (.setPermission (hdfsfilesystem "/") (Path. path) (FsPermission. mode))) false))))
+                  (ok (str (try
+                             (nil? (.setPermission (hdfsfilesystem "/") (Path. path) (FsPermission. mode)))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
+
              (GET "/chown" []
                   :return String
                   :query-params [path :- String, uid :- String, gid :- String]
                   :summary "hadoop fs -chown uid:gid <path>"
-                  (ok (str (or (nil? (.setOwner (hdfsfilesystem "/") (Path. path) uid gid)) false))))
+                  (ok (str (try
+                             (nil? (.setOwner (hdfsfilesystem "/") (Path. path) uid gid))
+                             (catch Exception e (str "caught exception: " e (.getMessage e)))))))
 
              (GET "/list" []
                   :return [String]
                   :query-params [path :- String]
                   :summary "hadoop fs -l <path>"
-                  (ok (map #(.getPath (.toUri (.getPath %))) (.listStatus (hdfsfilesystem "/") (Path. path))))))))
+                  (ok
+                   (try
+                     (into [] (map #(str (.getPath %) " " (.getPermission %)) (.listStatus (hdfsfilesystem "/") (Path. path))))
+                     (catch Exception e [(str "caught exception: " e (.getMessage e))]))))
+
+             (GET "/echo" []
+                   :return String
+                   :query-params [msg :- String]
+                   :summary "echoe your"
+                   (ok msg)) )))
+
+
+
