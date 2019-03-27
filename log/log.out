@@ -1,5 +1,0 @@
-Logging initialized @1755ms
-jetty-9.2.z-SNAPSHOT
-Started ServerConnector@386181f7{HTTP/1.1}{0.0.0.0:8000}
-Started @17160ms
-Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
