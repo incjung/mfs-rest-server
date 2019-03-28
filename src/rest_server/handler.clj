@@ -1,7 +1,8 @@
 (ns rest-server.handler
   (:require [compojure.api.sweet :refer :all]
             [ring.util.http-response :refer :all]
-            [clojure.java.shell :as sh]
+            [ring.middleware.defaults :refer :all]
+            ;;[clojure.java.shell :as sh]
             [clj-http.client :as client]
             [schema.core :as s])
   (:import  [org.apache.hadoop.conf Configuration]
@@ -178,3 +179,4 @@
 
 
 
+(def site (wrap-defaults api secure-site-defaults))

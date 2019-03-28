@@ -3,9 +3,16 @@
    :dependencies [[org.clojure/clojure "1.8.0"]
                   [clj-http "3.9.1"]
                   [metosin/compojure-api "1.1.11"]
+                  [ring/ring-defaults "0.3.2"]
                   [org.apache.hadoop/hadoop-common "2.7.0-mapr-1808"]]
                   ;;[org.apache.hadoop/hadoop-common "2.7.0-mapr-1607"]]
-   :ring {:handler rest-server.handler/app}
+   :ring {:handler rest-server.handler/app
+          :port 8445
+          :ssl? true
+          :ssl-port 8446
+          ;;:keystore "resources/ssl_keystore"
+          :keystore "/opt/mapr/conf/ssl_keystore"
+          :key-password "mapr123" }
    :uberjar-name "mfs-rest-server.jar"
    ;;:repositories {"local" ~(str (.toURI (java.io.File. "/Users/incjjung/.m2/repository/")))}
    :repositories {"mapr-releases" "http://repository.mapr.com/maven/"}
