@@ -1,4 +1,10 @@
- (defproject mfs-rest-server "0.1.0-SNAPSHOT"
+;; got message 'use insecure HTTP repository without TLS' 
+;; never used like: 
+;;(require 'cemerick.pomegranate.aether)
+;;(cemerick.pomegranate.aether/register-wagon-factory!
+;; "http" #(org.apache.maven.wagon.providers.http.HttpWagon.))
+ 
+(defproject mfs-rest-server "0.1.0-SNAPSHOT"
    :description "FIXME: write description"
    :dependencies [[org.clojure/clojure "1.8.0"]
                   [clj-http "3.9.1"]
